@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Bhm89UiEevcQW0t4Ln6c0gmupvM6zsE+LRIw6JXcuK0Ik5G1HMoOeO4Sy+cbkOqZDrnti9D42aIIbOspN8flzg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\draep\\Documents\\source\\_scratch\\CataParser\\CataParser\\CataParser.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\draep\\.nuget\\packages\\csvhelper\\27.2.1\\csvhelper.27.2.1.nupkg.sha512"
+  ],
+  "logs": []
+}
