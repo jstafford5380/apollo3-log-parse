@@ -2,6 +2,7 @@
 
 public class LogParser : IDisposable
 {
+    private long LineNumber = 0;
     private StreamReader _stream;
     private bool _disposedValue;
 
@@ -13,17 +14,19 @@ public class LogParser : IDisposable
         _stream = File.OpenText(logPath);
     }
 
-    public IEnumerable<LogEventBase> Read()
+    public bool Next(out LogEventBase logEvent)
     {
-        while (!_stream.EndOfStream)
-        {
-            var line = _stream.ReadLine();
-            if (line == null)
-                continue;
+        logEvent = null;
+        if (_stream.EndOfStream)
+            return false;
 
-            var logEvent = LogEventBase.Parse(line);
-            yield return logEvent;
-        }
+        var line = _stream.ReadLine();
+        if (line == null)
+            return false;
+
+        logEvent = LogEventBase.Parse(line, LineNumber);
+        LineNumber++;
+        return true;
     }
 
     protected virtual void Dispose(bool disposing)

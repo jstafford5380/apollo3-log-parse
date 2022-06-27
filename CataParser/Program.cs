@@ -1,29 +1,47 @@
 ﻿using CataParser;
-using CataParser.Calculators;
-using CataParser.Calculators.Damage;
+using CataParser.Collectors;
+using CataParser.Collectors.Damage;
+using CataParser.Encounters;
 using CataParser.Events;
 
-using var parser = new LogParser(@"<file path>");
-var dpsCalc = new DpsCalculator();
-var damageTaken = new DamageTakenCalculator();
+var dps = new DamageCollector();
 
-foreach(var entry in parser.Read())
+using var parser = new LogParser(@"C:\Users\draep\Downloads\WoWCombatLog.txt");
+var encounters = new EncounterParser(TimeSpan.FromSeconds(30));
+encounters.ParseBossAttempts(parser);
+
+var reportBuilder = ReportBuilder.FromEncounterParse(encounters);
+reportBuilder.Use<DamageCollector>();
+
+reportBuilder.Build();
+
+var ragAttempts = reportBuilder.Reports["Ragnaros"];
+//var damage = ragAttempts.GetCollector<DamageCollector>(3);
+//var playerDamage = damage.PlayerDamageTaken;
+
+for(var i = 1; i <= ragAttempts.Attempts.Count; i++)
 {
-    if (entry.Effect.Result == EventSuffix.Summon)
-        dpsCalc.RegisterMinion(entry);
+    var damage = ragAttempts.GetCollector<DamageCollector>(i);
 
-    if (entry.Effect.IsDamage)
+    Console.WriteLine($"DPS (Attempt {i}):");
+    foreach(var item in damage.PlayerDamage.OrderByDescending(r => r.Value.Dps))
     {
-        dpsCalc.AddDamage(entry);
-        damageTaken.Record(entry);
+        Console.WriteLine($"  {item.Value.SourceName}: {item.Value.Dps:#,#}");
     }
+
+    Console.WriteLine();
+    Console.WriteLine("Damage Taken:");
+
+    foreach(var item in damage.PlayerDamageTaken)
+    {
+        Console.WriteLine($"  {item.Key}:");
+        foreach(var source in item.Value)
+        {
+            Console.WriteLine($"    {source.Key}: {source.Value:#,#}");
+        }
+    }
+
+    Console.WriteLine();
 }
-
-dpsCalc.ReconcileMinionDamage();
-dpsCalc.CalculateDps();
-
-Console.WriteLine(dpsCalc.ReportPlayerDamage());
-
-Console.WriteLine(damageTaken.ReportDamageTakenBySpellName("Lava Wave"));
 
 Console.ReadLine();

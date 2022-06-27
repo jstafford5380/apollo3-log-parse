@@ -1,4 +1,4 @@
-﻿using CataParser;
+﻿using CataParser.Events;
 using CsvHelper;
 
 public class Effect
