@@ -4,9 +4,11 @@ using CataParser.Collectors.Damage;
 using CataParser.Encounters;
 using CataParser.Events;
 
+ExternalVariableLoader.Load();
+
 var dps = new DamageCollector();
 
-using var parser = new LogParser(@"C:\Users\draep\Downloads\WoWCombatLog.txt");
+using var parser = new LogParser(@"C:\Users\draep\OneDrive\wow_logs\20220627-g3\WoWCombatLog.txt");
 var encounters = new EncounterParser(TimeSpan.FromSeconds(30));
 encounters.ParseBossAttempts(parser);
 
@@ -15,9 +17,7 @@ reportBuilder.Use<DamageCollector>();
 
 reportBuilder.Build();
 
-var ragAttempts = reportBuilder.Reports["Ragnaros"];
-//var damage = ragAttempts.GetCollector<DamageCollector>(3);
-//var playerDamage = damage.PlayerDamageTaken;
+var ragAttempts = reportBuilder.Reports["Alysrazor"];
 
 for(var i = 1; i <= ragAttempts.Attempts.Count; i++)
 {

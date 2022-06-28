@@ -1,5 +1,0 @@
-Determining an ENCOUNTER_STARTED
- - On every DAMAGE event, check the target against a list of bosses
-
-Determining an ENCOUNTER_ENDED
- - Look for player regen event (something that can only be used out of combat)

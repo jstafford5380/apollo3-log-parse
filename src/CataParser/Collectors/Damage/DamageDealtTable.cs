@@ -61,7 +61,6 @@ public class DamageTable : IDamageTable
             .Average(g => g.Sum(e => e.Amount));
 
         Dps = Math.Round(Dps, 2);
-        //_damageEvents.Clear();
     }
 
     public bool OwnsMinion(ulong unitId) => Summoned.ContainsKey(unitId);
